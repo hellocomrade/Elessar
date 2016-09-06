@@ -1,0 +1,15 @@
+{
+  "name": "elessar-test",
+  "version": "0.0.0",
+  "description": "",
+  "main": "elessar.js",
+  "dependencies": {
+    "bower": "~1.7.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD"
+}

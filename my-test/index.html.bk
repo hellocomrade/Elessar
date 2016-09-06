@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+<link rel="stylesheet" href="bootstrap.css">
+<!--
+<link rel="stylesheet" href="bower_components/flatstrap/assets/css/bootstrap-responsive.css">
+-->
+<link rel="stylesheet" href="elessar.css">
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,100' rel='stylesheet' type='text/css'>
+
+<title>Elessar: draggable multiple range sliders</title>
+<style>
+body {
+  font-family: Roboto, sans-serif;
+}
+
+h1, h2 {
+  font-family: Roboto, sans-serif;
+  font-weight: 100;
+}
+
+h1 {
+  font-size: 60px;
+}
+
+.elessar-handle {
+  opacity: 0.1;
+}
+
+header .pull-right {
+  margin: 10px 0 0 10px;
+  padding: 9.5px;
+}
+</style>
+</head>
+<body>
+
+
+<header class="container">
+  <h2>Draggable multiple range sliders</h2>
+</header>
+
+<div class="container" role="main">
+  <pre class="changing"></pre>
+</div>
+
+<script src="bundle.js"></script>
+</body>
+</html>

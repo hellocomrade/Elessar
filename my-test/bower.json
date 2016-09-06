@@ -1,0 +1,11 @@
+{
+  "name": "elessar-test",
+  "main": "elessar.js",
+  "description": "",
+  "license": "MIT",
+  "homepage": "",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "flatstrap": "^3.3.1"
+  }
+}
