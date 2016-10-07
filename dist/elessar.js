@@ -257,16 +257,20 @@ var Range = Element.extend(vertical).extend({
     }
     if (next && next.val()[0] < range[1]) {
       if(!this.perant.options.allowSwap || next.val()[1] >= range[0]) {
-        range[1] = next.val()[0];
-        if(!valOpts.dontApplyDelta) range[0] = range[1] - delta;
+        if(!this.perant.options.allowMerge) {
+          range[1] = next.val()[0];
+          if(!valOpts.dontApplyDelta) range[0] = range[1] - delta;
+        }
       } else {
         this.perant.repositionRange(this, range);
       }
     }
     if (prev && prev.val()[1] > range[0]) {
       if(!this.perant.options.allowSwap || prev.val()[0] <= range[1]) {
-        range[0] = prev.val()[1];
-        if(!valOpts.dontApplyDelta) range[1] = range[0] + delta;
+        if(!this.perant.options.allowMerge) {
+          range[0] = prev.val()[1];
+          if(!valOpts.dontApplyDelta) range[1] = range[0] + delta;
+        }
       } else {
         this.perant.repositionRange(this, range);
       }
@@ -366,6 +370,45 @@ var Range = Element.extend(vertical).extend({
       self.swapping = false;
       $(document).off('mouseup.elessar mousemove.elessar touchend.elessar touchmove.elessar');
       $('body').removeClass('elessar-resizing elessar-dragging elessar-resizing-vertical elessar-dragging-vertical');
+
+      var rangebars = self.perant.ranges;
+        /*
+         * This might be redundant since range bar should always be greater than zero at this moment
+        */
+      if (self.perant.options.allowMerge && rangebars.length > 0) {
+          var arrRemoving = new Array();
+          /*
+           * ranges should be sorted particularly necessary if we drag any range from right to left, which will
+           * break the original non decreasing order otherwise could be kept if drag the range from left to right
+          */
+          rangebars.sort(function (a, b) {
+              if (a.range[0] < b.range[0]) return -1;
+              if (a.range[0] == b.range[0]) {
+                  if (a.range[1] <= b.range[1]) return a.range[1] == b.range[1] ? 0 : -1;
+                  return 1;
+              }
+              return 1;
+          });
+          var prevRng = rangebars[0];
+          for (var i = 1; i < rangebars.length; ++i) {
+              if (prevRng.range[1] >= rangebars[i].range[0]) {
+                  if (prevRng.range[1] < rangebars[i].range[1]) {
+                      arrRemoving.push(prevRng);
+                      prevRng = self.perant.addRange([prevRng.range[0], rangebars[i].range[1]]);
+                      /*
+                       * Since we introduce a new range in the array and we are in the mid of the loop of the same array
+                       * we have to do i += 2 to avoid comparing prevRng with itself.
+                       */
+                      ++i;
+                  }
+                  arrRemoving.push(rangebars[i]);
+              }
+              else
+                  prevRng = rangebars[i];
+          }
+          for (var i = 0; i < arrRemoving.length; ++i)
+              self.perant.removeRange(arrRemoving[i], false, false);
+      }
     });
   },
 
@@ -728,7 +771,8 @@ RangeBar.defaults = {
   allowDelete: false,
   vertical: false,
   htmlLabel: false,
-  allowSwap: true
+  allowSwap: true,
+  allowMerge: false
 };
 
 module.exports = RangeBar;
